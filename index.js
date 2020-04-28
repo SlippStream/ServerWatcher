@@ -17,10 +17,10 @@ client.on('ready', () => {
   console.log("as " + client.user.username);
   var channel = client.channels.cache.get("687806600013938688");
 
-  http();
+  pingServerStatus();
   setInterval(function() {
     console.log("Pinging for data");
-    http();
+    pingServerStatus();
 
     if (m != "") {
       channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
@@ -48,7 +48,7 @@ client.on("message", msg => {
 
 client.on('error', console.error);
 
-function http() {
+function pingServerStatus() {
   https.get("https://mcapi.us/server/status?" + suffix, (resp) => {
     let data = '';
 
