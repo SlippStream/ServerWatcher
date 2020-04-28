@@ -12,13 +12,14 @@ var player = 0, m = "";
 client.on('ready', () => {
   console.log("I'm in");
   console.log("as " + client.user.username);
+  var channel = client.channels.cache.get("687806600013938688");
 
+  http();
   setInterval(function() {
     console.log("Pinging for data");
     http();
 
     if (m != "") {
-      var channel = client.channels.cache.get("687806600013938688");
       channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
       console.log("Updated channel topic");
     }
