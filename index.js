@@ -18,6 +18,7 @@ client.on('ready', () => {
 
     var channel = client.channels.cache.get("687806600013938688");
     channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
+    console.log("Updated channel topic");
 }, 20000);
 });
 
@@ -27,12 +28,14 @@ function http() {
 
     resp.on('data', (chunk) => {
       data += chunk;
+      console.log("Received data");
     });
 
     resp.on('end', () => {
       let raw = JSON.parse(data);
       player = raw.players.now;
       m = raw.motd;
+      console.log("Sending data back...");
     });
   });
 }
