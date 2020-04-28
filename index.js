@@ -8,6 +8,7 @@ const base_url = "https://mcapi.us/server/";
 const donate = "https://paypal.me/thiccyZ";
 
 var player = 0, m = "";
+var prefix = "$";
 
 client.on('ready', () => {
   console.log("I'm in");
@@ -24,6 +25,17 @@ client.on('ready', () => {
       console.log("Updated channel topic");
     }
 }, 20000);
+});
+
+client.on("message", msg => {
+  if (msg.content.substr(0,1) == prefix) {
+    var content = msg.content.substr(1);
+    var channel = msg.channel;
+    var user = msg.author;
+
+    if (content == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
+    else if (content == "status") {channel.send("", {files: ["http://mcapi.us/server/image?ip=51.161.101.140&theme=dark&title=COVIDCraft"]});}
+  }
 });
 
 client.on('error', console.error);
