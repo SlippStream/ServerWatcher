@@ -36,7 +36,8 @@ client.on("message", msg => {
 
     if (content == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
     else if (content == "status") {
-      if (online) {let on = "Online"} else let on = "Offline";
+      let on = "Offline";
+      if (online) {let on = "Online"}
       channel.send("```\nCOVIDCraft\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n" + m + "\n```");}
   }
 });
