@@ -26,6 +26,8 @@ client.on('ready', () => {
 }, 20000);
 });
 
+client.on('error', console.error);
+
 function http() {
   https.get("https://mcapi.us/server/status?" + suffix, (resp) => {
     let data = '';
