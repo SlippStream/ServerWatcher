@@ -2,6 +2,8 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
+const fs = require('fs');
+const request = require('request');
 
 const suffix = "ip=51.161.101.140";
 const base_url = "https://mcapi.us/server/";
@@ -34,7 +36,37 @@ client.on("message", msg => {
     var user = msg.author;
 
     if (content == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
-    else if (content == "status") {channel.send("", {files: ["http://mcapi.us/server/image?ip=51.161.101.140&theme=dark&title=COVIDCraft"]});}
+    else if (content == "status") {
+      var statusFile = fs.createWriteStream('img.png');
+      await new Promise((resolve, reject) => {
+        let stream = request({
+          uri: 'http://mcapi.us/server/image?ip=51.161.101.140&theme=dark&title=COVIDCraft',
+          headers: {
+            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept-Language': 'en-US,en;q=0.9',
+            'Connection': 'keep-alive',
+            'Cache-Control': 'max-age=0',
+            'Upgrade-Insecure-Requests': '1',
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.122 Safari/537.36',
+            'DNT': '1'
+          },
+          gzip: true
+        })
+        .pipe(statusFile)
+        .on('finish', () => {
+          console.log('The file is finished downloading.');
+          resolve();
+        })
+        .on('error', (error) => {
+          reject(error);
+        })
+      })
+      .catch(error => {
+        console.log("Error: ${error}");
+      });
+      fs.close(statusFile);
+      channel.send("", {files: ["./img.png"]});}
   }
 });
 
