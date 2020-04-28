@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
-const keep_alive = require("./keep_alive.js");
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
 
@@ -10,7 +9,6 @@ const donate = "https://paypal.me/thiccyZ";
 
 var player = 0, m = "";
 
-client.login(token);
 client.on('ready', () => {
   console.log("I'm in");
   console.log("as " + client.user.username);
