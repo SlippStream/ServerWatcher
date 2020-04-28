@@ -32,6 +32,8 @@ function http() {
   https.get("https://mcapi.us/server/status?" + suffix, (resp) => {
     let data = '';
 
+    resp.on('error', console.error);
+    
     resp.on('data', (chunk) => {
       data += chunk;
       console.log("Received data");
