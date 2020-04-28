@@ -17,9 +17,11 @@ client.on('ready', () => {
     console.log("Pinging for data");
     http();
 
-    var channel = client.channels.cache.get("687806600013938688");
-    channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
-    console.log("Updated channel topic");
+    if (m != "") {
+      var channel = client.channels.cache.get("687806600013938688");
+      channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
+      console.log("Updated channel topic");
+    }
 }, 20000);
 });
 
