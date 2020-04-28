@@ -41,7 +41,6 @@ client.on("message", msg => {
       var request = http.get("http://mcapi.us/server/image?ip=51.161.101.140&theme=dark&title=COVIDCraft", function(response) {
         response.pipe(statusFile);
       });
-      fs.close(statusFile);
       channel.send("", {files: ["./img.png"]});}
   }
 });
