@@ -14,6 +14,7 @@ client.on('ready', () => {
   console.log("as " + client.user.username);
 
   setInterval(function() {
+    console.log("Pinging for data");
     http();
 
     var channel = client.channels.cache.get("687806600013938688");
@@ -35,7 +36,7 @@ function http() {
       let raw = JSON.parse(data);
       player = raw.players.now;
       m = raw.motd;
-      console.log("Sending data back...");
+      console.log("Sending data back... (players " + player + " motto " + m + ")");
     });
   });
 }
