@@ -2,15 +2,14 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
-const http = require('http');
-const fs = require('fs');
 
 const suffix = "ip=51.161.101.140";
-const base_url = "https://mcapi.us/server/";
+const base_url = "https://mcapi.us/server/status?";
 const donate = "https://paypal.me/thiccyZ";
 
-var player = 0, m = "";
+var player = 0, m = "", online = false;
 var prefix = "$";
+var raw;
 
 client.on('ready', () => {
   console.log("I'm in");
@@ -37,18 +36,15 @@ client.on("message", msg => {
 
     if (content == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
     else if (content == "status") {
-      var statusFile = fs.createWriteStream('img.png');
-      var request = http.get("http://mcapi.us/server/image?ip=51.161.101.140&theme=dark&title=COVIDCraft", function(response) {
-        response.pipe(statusFile);
-      });
-      channel.send("", {files: ["./img.png"]});}
+      if (online) {let on = "Online"} else let on = "Offline";
+      channel.send("```\nCOVIDCraft\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n" + m + "\n```");}
   }
 });
 
 client.on('error', console.error);
 
 function pingServerStatus() {
-  https.get("https://mcapi.us/server/status?" + suffix, (resp) => {
+  https.get(base_url + suffix, (resp) => {
     let data = '';
 
     resp.on('error', console.error);
@@ -58,10 +54,11 @@ function pingServerStatus() {
     });
 
     resp.on('end', () => {
-      let raw = JSON.parse(data);
+      raw = JSON.parse(data);
       player = raw.players.now;
       m = raw.motd;
-      console.log("Sending data back... (players " + player + " motto " + m + ")");
+      online = raw.online;
+      console.log("Sending data back... (players: " + player + ", motto: " + m + ")");
     });
   });
 }
