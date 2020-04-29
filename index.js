@@ -3,8 +3,9 @@ const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
 
-const suffix = "ip=51.161.101.140";
-const base_url = "https://mcapi.us/server/status?";
+const ip = "51.161.101.140";
+const dynmap_ip = "http://51.161.101.140:8196/index.html";
+const base_url = "https://mcapi.us/server/status?ip=";
 const donate = "https://paypal.me/thiccyZ";
 
 var player = 0, m = "", online = false;
@@ -34,18 +35,29 @@ client.on("message", msg => {
     var channel = msg.channel;
     var user = msg.author;
 
-    if (content == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
-    else if (content == "status") {
+    // DONATE
+    if (content.toLowerCase == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
+    //STATUS
+    else if (content.toLowerCase == "status") {
       let on = "Offline";
       if (raw.online) {on = "Online"}
       channel.send("```\nCOVIDCraft -- " + m + "\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n```");}
+    //IP
+    else if (content.toLowerCase == "ip") {
+      channel.send("The IP for this server is `" + ip + "`\nThe Dynmap can be found at " + dynmap_ip);
+    }
+    //HELP
+    else if (content.toLowerCase == "help") {
+      channel.send("```\n" + prefix + "donate - Sends a donate link to support the server.\n" + prefix + "status - Display server status, including player count and whether the server is down.\n" + prefix + "ip - Sends the server ip and dynmap address.```")
+    }
   }
+  else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
 });
 
 client.on('error', console.error);
 
 function pingServerStatus() {
-  https.get(base_url + suffix, (resp) => {
+  https.get(base_url + ip, (resp) => {
     let data = '';
 
     resp.on('error', console.error);
