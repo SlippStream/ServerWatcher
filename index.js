@@ -36,18 +36,18 @@ client.on("message", msg => {
     var user = msg.author;
 
     // DONATE
-    if (content.toLowerCase == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
+    if (content.toLowerCase() == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
     //STATUS
-    else if (content.toLowerCase == "status") {
+    else if (content.toLowerCase() == "status") {
       let on = "Offline";
       if (raw.online) {on = "Online"}
       channel.send("```\nCOVIDCraft -- " + m + "\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n```");}
     //IP
-    else if (content.toLowerCase == "ip") {
+    else if (content.toLowerCase() == "ip") {
       channel.send("The IP for this server is `" + ip + "`\nThe Dynmap can be found at " + dynmap_ip);
     }
     //HELP
-    else if (content.toLowerCase == "help") {
+    else if (content.toLowerCase() == "help") {
       channel.send("```\n" + prefix + "donate - Sends a donate link to support the server.\n" + prefix + "status - Display server status, including player count and whether the server is down.\n" + prefix + "ip - Sends the server ip and dynmap address.```")
     }
   }
