@@ -55,6 +55,7 @@ client.on("message", msg => {
     //DICE FUNCTIONS:
     //ROLL
     else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
+      console.log("starting roll...");
       var arg = content.split(" ")[1].toLowerCase().split("d");
       var numDice = arg[0];
       var typeDice = arg[1];
@@ -73,6 +74,8 @@ client.on("message", msg => {
           rolls += results[i] + ", ";
         }
         rolls += ")";
+
+        console.log("Roll successful! Rolled " + total);
 
         if (numDice == 1) {
           outMsg += results[0] + " ";
@@ -116,6 +119,7 @@ function pingServerStatus() {
 }
 
 function roll(numDice, typeDice) {
+  console.log("rolling...");
   var arr = [];
   for (var i = 0; i < numDice; i++) {
     let rand = Math.ceil(Math.random() * typeDice);
