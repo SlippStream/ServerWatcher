@@ -54,15 +54,15 @@ client.on("message", msg => {
 
     //DICE FUNCTIONS:
     //ROLL
-    if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
-      var arg = content.split(" ")[1];
-      var numDice = arg.substr(0,1);
-      var typeDice = arg.substr(2);
+    else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
+      var arg = content.split(" ")[1].toLowerCase().split("d");
+      var numDice = arg[0];
+      var typeDice = arg[1];
       var outMsg = "You rolled: ";
       var rolls = "(";
       var total = 0;
 
-      if ((parseInt(numDice) != NaN && numDice > 0) && (parseInt(typeDice) != NaN && typeDice > 0) && (arg.substr(1,2).toLowerCase() != "d")) {
+      if ((parseInt(numDice) != NaN && numDice > 0) && (parseInt(typeDice) != NaN && typeDice > 0)) {
         numDice = parseInt(numDice);
         typeDice = parseInt(typeDice);
 
@@ -87,6 +87,8 @@ client.on("message", msg => {
 
       }
     }
+    //END DICE FUNCTIONS
+
   }
   else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
 });
