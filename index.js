@@ -57,8 +57,15 @@ client.on("message", msg => {
     else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
       console.log("starting roll...");
       var arg = content.split(" ")[1].toLowerCase().split("d");
-      var numDice = arg[0];
-      var typeDice = arg[1];
+      var numDice, typeDice;
+      if (content.split(" ")[1].toLowerCase().substr(0,1) == "d") {
+        var numDice = 1;
+        var typeDice = arg[0];
+      }
+      else {
+        var numDice = arg[0];
+        var typeDice = arg[1];
+      }
       var outMsg = "You rolled: ";
       var rolls = "(";
       var total = 0;
@@ -68,7 +75,7 @@ client.on("message", msg => {
         typeDice = parseInt(typeDice);
 
         if (numDice == 0) numDice = 1;
-        
+
         var results = roll(numDice, typeDice);
 
         for (var i = 0; i < results.length; i++) {
