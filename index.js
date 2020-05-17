@@ -61,11 +61,10 @@ client.on("message", msg => {
       var outMsg = "You rolled: ";
       var rolls = "(";
       var total = 0;
-
-      console.log(arg[0]);
+      
       if (content.split(" ")[1].toLowerCase().substr(0,1) == "d") {
         var numDice = 1;
-        var typeDice = arg[0];
+        var typeDice = arg[1];
       }
       else {
         var numDice = arg[0];
