@@ -70,8 +70,9 @@ client.on("message", msg => {
         var results = roll(numDice, typeDice);
 
         for (var i = 0; i < results.length; i++) {
+          if (i != 0) {rolls += ", ";}
           total += results[i];
-          rolls += results[i] + ", ";
+          rolls += results[i];
         }
         rolls += ")";
 
