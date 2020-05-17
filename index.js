@@ -61,7 +61,7 @@ client.on("message", msg => {
       var outMsg = "You rolled: ";
       var rolls = "(";
       var total = 0;
-      
+
       if (content.split(" ")[1].toLowerCase().substr(0,1) == "d") {
         var numDice = 1;
         var typeDice = arg[1];
@@ -76,8 +76,6 @@ client.on("message", msg => {
       if ((parseInt(numDice) != NaN && numDice >= 0) && (parseInt(typeDice) != NaN && typeDice > 0)) {
         numDice = parseInt(numDice);
         typeDice = parseInt(typeDice);
-
-        if (numDice == 0) numDice = 1;
 
         var results = roll(numDice, typeDice);
 
