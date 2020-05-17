@@ -15,7 +15,8 @@ var raw;
 client.on('ready', () => {
   console.log("I'm in");
   console.log("as " + client.user.username);
-  var channel = client.channels.cache.get("687806600013938688");
+  var topic_channel = client.channels.cache.get("687806600013938688");
+
 
   pingServerStatus();
   setInterval(function() {
@@ -23,7 +24,7 @@ client.on('ready', () => {
     pingServerStatus();
 
     if (m != "") {
-      channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
+      topic_channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
       console.log("Updated channel topic");
     }
 }, 20000);
@@ -50,6 +51,51 @@ client.on("message", msg => {
     else if (content.toLowerCase() == "help") {
       channel.send("```\n" + prefix + "donate - Sends a donate link to support the server.\n" + prefix + "status - Display server status, including player count and whether the server is down.\n" + prefix + "ip - Sends the server ip and dynmap address.```")
     }
+
+    //DICE FUNCTIONS:
+    //ROLL
+    if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
+      var arg = content.split(" ")[1];
+      var numDice = arg.substr(0,1);
+      var typeDice = arg.substr(2);
+      var outMsg = "You rolled: ";
+      var rolls = "(";
+      var total = 0;
+
+      if (arg.substr(1,2).toLowerCase() != "d") {break;}
+
+      if (parseInt(numDice) != NaN && numDice > 0) {numDice = parseInt(numDice);}
+      else {
+        channel.send("Please enter a valid number of dice");
+        break;
+      }
+
+      if (parseInt(typeDice) != NaN && typeDice > 0) {typeDice = parseInt(typeDice);}
+      else {
+        channel.send("Please enter a valid die");
+        break;
+      }
+
+      var results = roll(numDice, typeDice);
+
+      for (var i = 0; i < results.length; i++) {
+        total += results[i];
+        rolls += results[i] + ", ";
+      }
+      rolls += ")";
+
+      if (numDice == 1) {
+        outMsg += results[0] + " ";
+        if (typeDice == 20) {
+          if (results[0] == 20) {outMsg += "[CRITICAL SUCCESS]";}
+          else if (results[0] == 1) {outMsg += "[CRITICAL FAILURE]";}
+        }
+      }
+      else {
+        outMsg += total + " " + rolls;
+      }
+
+    }
   }
   else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
 });
@@ -74,6 +120,15 @@ function pingServerStatus() {
       console.log("Sending data back... (players: " + player + ", motto: " + m + ")");
     });
   });
+}
+
+function roll(numDice, typeDice) {
+  var arr = [];
+  for (var i = 0; i < numDice; i++) {
+    let rand = Math.ceil(Math.random() * typeDice);
+    arr.push(rand);
+  }
+  return arr;
 }
 
 client.login(token);
