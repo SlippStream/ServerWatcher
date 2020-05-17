@@ -62,39 +62,30 @@ client.on("message", msg => {
       var rolls = "(";
       var total = 0;
 
-      if (arg.substr(1,2).toLowerCase() != "d") {break;}
+      if ((parseInt(numDice) != NaN && numDice > 0) && (parseInt(typeDice) != NaN && typeDice > 0) && (arg.substr(1,2).toLowerCase() != "d")) {
+        numDice = parseInt(numDice);
+        typeDice = parseInt(typeDice);
 
-      if (parseInt(numDice) != NaN && numDice > 0) {numDice = parseInt(numDice);}
-      else {
-        channel.send("Please enter a valid number of dice");
-        break;
-      }
+        var results = roll(numDice, typeDice);
 
-      if (parseInt(typeDice) != NaN && typeDice > 0) {typeDice = parseInt(typeDice);}
-      else {
-        channel.send("Please enter a valid die");
-        break;
-      }
-
-      var results = roll(numDice, typeDice);
-
-      for (var i = 0; i < results.length; i++) {
-        total += results[i];
-        rolls += results[i] + ", ";
-      }
-      rolls += ")";
-
-      if (numDice == 1) {
-        outMsg += results[0] + " ";
-        if (typeDice == 20) {
-          if (results[0] == 20) {outMsg += "[CRITICAL SUCCESS]";}
-          else if (results[0] == 1) {outMsg += "[CRITICAL FAILURE]";}
+        for (var i = 0; i < results.length; i++) {
+          total += results[i];
+          rolls += results[i] + ", ";
         }
-      }
-      else {
-        outMsg += total + " " + rolls;
-      }
+        rolls += ")";
 
+        if (numDice == 1) {
+          outMsg += results[0] + " ";
+          if (typeDice == 20) {
+            if (results[0] == 20) {outMsg += "[CRITICAL SUCCESS]";}
+            else if (results[0] == 1) {outMsg += "[CRITICAL FAILURE]";}
+          }
+        }
+        else {
+          outMsg += total + " " + rolls;
+        }
+
+      }
     }
   }
   else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
