@@ -58,6 +58,11 @@ client.on("message", msg => {
       console.log("starting roll...");
       var arg = content.split(" ")[1].toLowerCase().split("d");
       var numDice, typeDice;
+      var outMsg = "You rolled: ";
+      var rolls = "(";
+      var total = 0;
+
+      console.log(content.split(" ")[1].toLowerCase().substr(0,1));
       if (content.split(" ")[1].toLowerCase().substr(0,1) == "d") {
         var numDice = 1;
         var typeDice = arg[0];
@@ -66,9 +71,8 @@ client.on("message", msg => {
         var numDice = arg[0];
         var typeDice = arg[1];
       }
-      var outMsg = "You rolled: ";
-      var rolls = "(";
-      var total = 0;
+
+
 
       if ((parseInt(numDice) != NaN && numDice >= 0) && (parseInt(typeDice) != NaN && typeDice > 0)) {
         numDice = parseInt(numDice);
