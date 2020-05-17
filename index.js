@@ -87,7 +87,7 @@ client.on("message", msg => {
         else {
           outMsg += total + " " + rolls;
         }
-
+        channel.send(outMsg);
       }
     }
     //END DICE FUNCTIONS
