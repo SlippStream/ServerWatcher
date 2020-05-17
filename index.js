@@ -73,7 +73,7 @@ client.on("message", msg => {
 
 
 
-      if ((parseInt(numDice) != NaN && numDice >= 0) && (parseInt(typeDice) != NaN && typeDice > 0)) {
+      if ((parseInt(numDice) != NaN && numDice > 0) && (parseInt(typeDice) != NaN && typeDice > 0)) {
         numDice = parseInt(numDice);
         typeDice = parseInt(typeDice);
 
