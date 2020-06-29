@@ -3,7 +3,8 @@ const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
 
-const ip = "144.217.199.1:25577";
+const ip = "144.217.199.1";
+const port = "25577";
 const dynmap_ip = "http://144.217.199.1:8054/index.html";
 const base_url = "https://mcapi.us/server/status?ip=";
 const donate = "https://paypal.me/thiccyZ";
@@ -110,7 +111,7 @@ client.on("message", msg => {
 client.on('error', console.error);
 
 function pingServerStatus() {
-  https.get(base_url + ip, (resp) => {
+  https.get(base_url + ip + "&port=" + port, (resp) => {
     let data = '';
 
     resp.on('error', console.error);
