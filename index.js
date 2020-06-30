@@ -1,3 +1,5 @@
+
+  
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
@@ -8,6 +10,8 @@ const port = "25577";
 const dynmap_ip = "http://144.217.199.1:8054/index.html";
 const base_url = "https://mcapi.us/server/status?ip=";
 const donate = "https://paypal.me/thiccyZ";
+const s1date = "30 June 2020";
+const s1down = "https://drive.google.com/drive/folders/1SgIPqSxxXR4mJi5rRLwMlFO39zeLdAnc?usp=sharing";
 
 var player = 0, m = "", online = false;
 var prefix = "$";
@@ -46,11 +50,14 @@ client.on("message", msg => {
       channel.send("```\nCOVIDCraft -- " + m + "\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n```");}
     //IP
     else if (content.toLowerCase() == "ip") {
-      channel.send("The IP for this server is `" + ip + "`\nThe Dynmap can be found at " + dynmap_ip);
+      channel.send("The IP for this server is `" + ip + ":" + port + "`\nThe Dynmap can be found at " + dynmap_ip);
     }
     //HELP
     else if (content.toLowerCase() == "help") {
       channel.send("```\n" + prefix + "donate - Sends a donate link to support the server.\n" + prefix + "status - Display server status, including player count and whether the server is down.\n" + prefix + "ip - Sends the server ip and dynmap address.```")
+    }
+    else if (content.toLowerCase() == "oldworld") {
+        channel.send("The Season 1 world download as of `" + s1date + "`:\n" + s1down);
     }
 
     //DICE FUNCTIONS:
