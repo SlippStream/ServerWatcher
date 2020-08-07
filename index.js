@@ -78,8 +78,8 @@ client.on("message", msg => {
     }
     //SET MOD ROLE (SINGLE USE)
     else if (phrase.toLowerCase() == "setmodrole" && modRole == null) {
-      var p = phrase.substr(phrase.indexOf("\"") + 1, phrase.lastIndexOf("\"") - 1);
-      if (getRoleFromName(p) != null) {
+      var p = content.substr(content.indexOf("\"") + 1, content.lastIndexOf("\"") - 1);
+      if (getRoleFromName(guild, p) != null) {
         channel.send("New mod role set: `" + p + "`");
         modRole = getRoleFromName(p);
         writeServerDataFromMemory();
