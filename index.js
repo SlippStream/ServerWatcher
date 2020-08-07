@@ -112,12 +112,13 @@ client.on("message", msg => {
     }
     //END DICE FUNCTIONS
 
+  }
+  else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
+  else {
     //MODERATION
     //ROUNDABOUT @EVERYONE
     if ((content.match(/<@/g) || []).length > maxUsersMentionedInSingleMessage) msg.delete();
-
   }
-  else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
 });
 
 client.on('error', console.error);
