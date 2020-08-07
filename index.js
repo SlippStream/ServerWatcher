@@ -212,7 +212,7 @@ function addDefaultDataForServer(guildID) {
 }
 
 function readServerDataIntoMemory() {
-  fs.readFileSync('serverData/guildVariables.json', 'r', function(err, data) {
+  fs.readFileSync('serverData/guildVariables.json', function(err, data) {
     if (err) return console.error(err);
     else {
       serverSettingsObj = JSON.parse(data);
