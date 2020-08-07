@@ -193,7 +193,8 @@ function getServerSettings(guildID) {
 
 function getServerIndex(guildID) {
   var index = -1;
-  serverSettingsObj.find(l => l == guildID);
+  serverSettingsObj.find(l => l.guildID == guildID);
+  if (l == undefined) return -1;
   return serverSettingsObj.indexOf(l);
 }
 
