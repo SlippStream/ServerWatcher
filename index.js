@@ -35,11 +35,13 @@ client.on('ready', () => {
 });
 
 client.on("message", msg => {
-  if (msg.content.substr(0,1) == prefix) {
-    var phrase = msg.content.substr(1);
     var content = msg.content;
+    var phrase = content.substr(1);
+    var firstChar = phrase.substr(0,1);
     var channel = msg.channel;
     var user = msg.author;
+  
+  if (msg.content.substr(0,1) == prefix) {
 
     // DONATE
     if (phrase.toLowerCase() == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
