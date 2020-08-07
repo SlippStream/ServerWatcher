@@ -216,6 +216,7 @@ function readServerDataIntoMemory() {
     if (err) return console.error(err);
     else {
       serverSettingsObj = JSON.parse(data);
+      return console.log("Server settings read into memory")
     }
   })
 }
@@ -228,7 +229,7 @@ function getRoleFromName(guildID, name) {
 
 function writeServerDataFromMemory() {
   fs.writeFile('serverData/guildVariables.json', serverSettingsObj, function() {
-    return;
+    return console.log("Server data written to drive");
   });
 }
 
