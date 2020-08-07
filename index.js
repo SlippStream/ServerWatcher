@@ -1,5 +1,3 @@
-
-  
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
@@ -16,6 +14,7 @@ const s1down = "https://drive.google.com/drive/folders/1SgIPqSxxXR4mJi5rRLwMlFO3
 var player = 0, m = "", online = false;
 var prefix = "$";
 var raw;
+var maxUsersMentionedInSingleMessage = 4;
 
 client.on('ready', () => {
   console.log("I'm in");
@@ -23,8 +22,8 @@ client.on('ready', () => {
   var topic_channel = client.channels.cache.get("687806600013938688");
 
 
-  pingServerStatus();
-  setInterval(function() {
+  //pingServerStatus();
+  /*setInterval(function() {
     console.log("Pinging for data");
     pingServerStatus();
 
@@ -32,45 +31,47 @@ client.on('ready', () => {
       topic_channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
       console.log("Updated channel topic");
     }
-}, 20000);
+}, 20000);*/
 });
 
 client.on("message", msg => {
   if (msg.content.substr(0,1) == prefix) {
-    var content = msg.content.substr(1);
+    var phrase = msg.content.substr(1);
+    var content = msg.content;
     var channel = msg.channel;
     var user = msg.author;
 
     // DONATE
-    if (content.toLowerCase() == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
+    if (phrase.toLowerCase() == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
+    
     //STATUS
-    else if (content.toLowerCase() == "status") {
+    else if (phrase.toLowerCase() == "status") {
       let on = "Offline";
       if (raw.online) {on = "Online"}
       channel.send("```\nCOVIDCraft -- " + m + "\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n```");}
     //IP
-    else if (content.toLowerCase() == "ip") {
+    else if (phrase.toLowerCase() == "ip") {
       channel.send("The IP for this server is `" + ip + ":" + port + "`\nThe Dynmap can be found at " + dynmap_ip);
     }
     //HELP
-    else if (content.toLowerCase() == "help") {
+    else if (phrase.toLowerCase() == "help") {
       channel.send("```\n" + prefix + "donate - Sends a donate link to support the server.\n" + prefix + "status - Display server status, including player count and whether the server is down.\n" + prefix + "ip - Sends the server ip and dynmap address.```")
     }
-    else if (content.toLowerCase() == "oldworld") {
+    else if (phrase.toLowerCase() == "oldworld") {
         channel.send("The Season 1 world download as of `" + s1date + "`:\n" + s1down);
     }
 
     //DICE FUNCTIONS:
     //ROLL
-    else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
+    else if(phrase.split(" ")[0].toLowerCase() == "roll" && phrase.split(" ")[1] != null) {
       console.log("starting roll...");
-      var arg = content.split(" ")[1].toLowerCase().split("d");
+      var arg = phrase.split(" ")[1].toLowerCase().split("d");
       var numDice, typeDice;
       var outMsg = "You rolled: ";
       var rolls = "(";
       var total = 0;
 
-      if (content.split(" ")[1].toLowerCase().substr(0,1) == "d") {
+      if (phrase.split(" ")[1].toLowerCase().substr(0,1) == "d") {
         var numDice = 1;
         var typeDice = arg[1];
       }
@@ -110,6 +111,10 @@ client.on("message", msg => {
       }
     }
     //END DICE FUNCTIONS
+
+    //MODERATION
+    //ROUNDABOUT @EVERYONE
+    if ((content.match(/<@/g) || []).length > maxUsersMentionedInSingleMessage) msg.delete();
 
   }
   else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
