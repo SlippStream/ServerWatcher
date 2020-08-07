@@ -18,7 +18,7 @@ const defaultModRole = null;
 
 var player = 0, m = "", online = false;
 var prefix, raw, maxUsersMentionedInSingleMessage, modRole;
-var serverSettingsObj;
+var serverSettingsObj = [];
 
 client.on('ready', () => {
   console.log("I'm in");
@@ -193,10 +193,8 @@ function getServerSettings(guildID) {
 
 function getServerIndex(guildID) {
   var index = -1;
-  for (var i = 0; i < serverSettingsObj.length - 1; i++) {
-    if (serverSettingsObj[i].guildID == guildID) index = i;
-  }
-  return index;
+  serverSettingsObj.find(l => l == guildID);
+  return serverSettingsObj.indexOf(l);
 }
 
 function addDefaultDataForServer(guildID) {
