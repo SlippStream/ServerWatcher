@@ -26,7 +26,7 @@ client.on('ready', () => {
   
   readServerDataIntoMemory();
 
-  setInterval(writeServerDataFromMemory(), 60000);
+  setInterval(function() {writeServerDataFromMemory()}, 60000);
 
   //pingServerStatus();
   /*setInterval(function() {
