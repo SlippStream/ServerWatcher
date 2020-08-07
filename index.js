@@ -227,7 +227,9 @@ function getRoleFromName(guildID, name) {
 }
 
 function writeServerDataFromMemory() {
-  fs.writeFile('serverData/guildVariables.json', serverSettingsObj);
+  fs.writeFile('serverData/guildVariables.json', serverSettingsObj, function() {
+    return;
+  });
 }
 
 client.login(token);
