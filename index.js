@@ -42,7 +42,7 @@ client.on('ready', () => {
 
 client.on("message", msg => {
     var content = msg.content;
-    var phrase = content.substr(1);
+    var phrase = content.substr(1).split(" ")[0];
     var firstChar = content.substr(0,1);
     var guild = msg.guild;
     var channel = msg.channel;
@@ -91,7 +91,7 @@ client.on("message", msg => {
 
     //DICE FUNCTIONS:
     //ROLL
-    else if(phrase.split(" ")[0].toLowerCase() == "roll" && phrase.split(" ")[1] != null) {
+    else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
       console.log("starting roll...");
       var arg = phrase.split(" ")[1].toLowerCase().split("d");
       var numDice, typeDice;
