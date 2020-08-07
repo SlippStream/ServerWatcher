@@ -201,10 +201,10 @@ function getServerIndex(guildID) {
 function addDefaultDataForServer(guildID) {
   if (getServerIndex(guildID) == -1) {
     serverSettingsObj.push({
-      'guildID': guildID,
-      'prefix': defaultPrefix,
-      'maxUsersMentionedInSingleMessage': defaultMaxUsersMentionedInSingleMessage,
-      'modRole': defaultModRole
+      "guildID": guildID,
+      "prefix": defaultPrefix,
+      "maxUsersMentionedInSingleMessage": defaultMaxUsersMentionedInSingleMessage,
+      "modRole": defaultModRole
     });
   }
   writeServerDataFromMemory();
