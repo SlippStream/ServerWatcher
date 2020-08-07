@@ -81,6 +81,7 @@ client.on("message", msg => {
       var p = content.substr(content.indexOf("\"") + 1, content.lastIndexOf("\"") - 1);
       if (getRoleFromName(guild, p) != null) {
         channel.send("New mod role set: `" + p + "`");
+        console.log("New mod role set: `" + p + "`");
         modRole = getRoleFromName(p);
         writeServerDataFromMemory();
       }
