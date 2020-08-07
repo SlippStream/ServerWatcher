@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const fs = require('fs');
 const client = new Discord.Client();
 const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
@@ -11,16 +12,21 @@ const donate = "https://paypal.me/thiccyZ";
 const s1date = "30 June 2020";
 const s1down = "https://drive.google.com/drive/folders/1SgIPqSxxXR4mJi5rRLwMlFO39zeLdAnc?usp=sharing";
 
+const defaultPrefix = "$";
+const defaultMaxUsersMentionedInSingleMessage = 3;
+const defaultModRole = null;
+
 var player = 0, m = "", online = false;
-var prefix = "$";
-var raw;
-var maxUsersMentionedInSingleMessage = 4;
+var prefix, raw, maxUsersMentionedInSingleMessage, modRole;
+var serverSettingsObj;
 
 client.on('ready', () => {
   console.log("I'm in");
   console.log("as " + client.user.username);
-  var topic_channel = client.channels.cache.get("687806600013938688");
+  
+  readServerDataIntoMemory();
 
+  setInterval(writeServerDataFromMemory(), 60000);
 
   //pingServerStatus();
   /*setInterval(function() {
@@ -37,9 +43,12 @@ client.on('ready', () => {
 client.on("message", msg => {
     var content = msg.content;
     var phrase = content.substr(1);
-    var firstChar = phrase.substr(0,1);
+    var firstChar = content.substr(0,1);
+    var guild = msg.guild;
     var channel = msg.channel;
     var user = msg.author;
+
+    getServerSettings(guild);
   
   if (msg.content.substr(0,1) == prefix) {
 
@@ -61,6 +70,23 @@ client.on("message", msg => {
     }
     else if (phrase.toLowerCase() == "oldworld") {
         channel.send("The Season 1 world download as of `" + s1date + "`:\n" + s1down);
+    }
+    //FORCE SERVER SETTINGS WRITE (MODS ONLY)
+    else if (phrase.toLowerCase() == "forcesave" && user.roles.indexOf(modRole) != -1) {
+      writeServerDataFromMemory();
+      channel.send("Data written!");
+    }
+    //SET MOD ROLE (SINGLE USE)
+    else if (phrase.toLowerCase() == "setmodrole" && modRole == null) {
+      var p = phrase.substr(phrase.indexOf("\"") + 1, phrase.lastIndexOf("\"") - 1);
+      if (getRoleFromName(p) != null) {
+        channel.send("New mod role set: `" + p + "`");
+        modRole = getRoleFromName(p);
+        writeServerDataFromMemory();
+      }
+      else {
+        channel.send("Role name not found");
+      }
     }
 
     //DICE FUNCTIONS:
@@ -153,6 +179,55 @@ function roll(numDice, typeDice) {
     arr.push(rand);
   }
   return arr;
+}
+
+function getServerSettings(guildID) {
+  if (getServerIndex(guildID) != -1) {
+    var server = serverSettingsObj[getServerIndex(guildID)];
+    this.prefix = server.prefix;
+    this.maxUsersMentionedInSingleMessage = server.maxUsersMentionedInSingleMessage;
+    this.modRole = server.modRole;
+  }
+  else addDefaultDataForServer(guildID);
+}
+
+function getServerIndex(guildID) {
+  var index = -1;
+  for (var i = 0; i < serverSettingsObj.length - 1; i++) {
+    if (serverSettingsObj[i].guildID == guildID) index = i;
+  }
+  return index;
+}
+
+function addDefaultDataForServer(guildID) {
+  if (getServerIndex(guildID) == -1) {
+    serverSettingsObj.push({
+      'guildID': guildID,
+      'prefix': defaultPrefix,
+      'maxUsersMentionedInSingleMessage': defaultMaxUsersMentionedInSingleMessage,
+      'modRole': defaultModRole
+    });
+  }
+  writeServerDataFromMemory();
+}
+
+function readServerDataIntoMemory() {
+  fs.readFileSync('serverData/guildVariables.json', 'r', function(err, data) {
+    if (err) return console.error(err);
+    else {
+      serverSettingsObj = JSON.parse(data);
+    }
+  })
+}
+
+function getRoleFromName(guildID, name) {
+  var guild = client.guilds.cache.get(guildID);
+  guild.roles.cache.find(role => role.name == name);
+  return role;
+}
+
+function writeServerDataFromMemory() {
+  fs.writeFile('serverData/guildVariables.json', serverSettingsObj);
 }
 
 client.login(token);
