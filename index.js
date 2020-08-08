@@ -19,6 +19,7 @@ const defaultModRole = null;
 var player = 0, m = "", online = false;
 var prefix, raw, maxUsersMentionedInSingleMessage, modRole;
 var serverSettingsObj = [];
+var instances = 3;
 
 client.on('ready', () => {
   console.log("I'm in");
@@ -146,7 +147,16 @@ client.on("message", msg => {
   else {
     //MODERATION
     //ROUNDABOUT @EVERYONE
-    if ((content.match(/<@/g) || []).length > maxUsersMentionedInSingleMessage) msg.delete();
+    if ((content.match(/<@/g) || []).length > maxUsersMentionedInSingleMessage) {
+      setTimeout(function() {msg.delete()}, Math.random() * 1000);
+    };
+    if (user.id == 269226883793551360 || user.id == 269218199298375681 || user.id == 269300710732988416) {
+      instances--;
+      if (instances == 0) {
+        setTimeout(function() {msg.delete()}, Math.random() * 1000);
+        instances = Math.ceil(Math.random() * 3) + 2;
+      }
+    }
   }
 });
 
