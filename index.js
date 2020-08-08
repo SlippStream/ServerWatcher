@@ -150,7 +150,7 @@ client.on("message", msg => {
     if ((content.match(/<@/g) || []).length > maxUsersMentionedInSingleMessage) {
       setTimeout(function() {msg.delete()}, Math.random() * 1000);
     };
-    if (user.id == 269226883793551360 || user.id == 269218199298375681 || user.id == 269300710732988416) {
+    if ((content.match(/<@/g) || []).length > 0 && (user.id == 269226883793551360 || user.id == 269218199298375681 || user.id == 269300710732988416)) {
       instances--;
       if (instances == 0) {
         setTimeout(function() {msg.delete()}, Math.random() * 1000);
