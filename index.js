@@ -1,6 +1,5 @@
 const { Structures } = require('discord.js');
 const fs = require('fs');
-const ytdl = require('ytdl-core');
 const { CommandoClient } = require('discord.js-commando');
 const path = require('path');
 const sqlite = require('sqlite');
