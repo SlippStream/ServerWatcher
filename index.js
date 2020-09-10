@@ -18,7 +18,6 @@ const donate = "https://paypal.me/thiccyZ";*/
 const defaultMaxUsersMentionedInSingleMessage = 3;
 
 var player = 0, m = "", online = false;
-var prefix, raw, maxUsersMentionedInSingleMessage, modRole;
 var instances = 3;
 
 Structures.extend('Guild', Guild => {
