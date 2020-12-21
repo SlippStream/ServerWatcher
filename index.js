@@ -1,85 +1,68 @@
-const { Structures } = require('discord.js');
-const fs = require('fs');
-const { Commando } = require('discord.js-commando');
-const path = require('path');
-const sqlite = require('sqlite');
-const {
-  token,
-  prefix,
-} = require('./config.json');
+const Discord = require('discord.js');
+const client = new Discord.Client();
+const token = "NTk4NTk1NTM3MzkzOTQyNTU5.Xqh5ow.pDZ6p2WBORb38FXMuXqcEGD7GIU";
 const https = require('https');
 
-/*const ip = "144.217.199.1";
-const port = "25577";
-const dynmap_ip = "http://144.217.199.1:8054/index.html";
+const ip = "51.161.101.140";
+const dynmap_ip = "http://51.161.101.140:8196/index.html";
 const base_url = "https://mcapi.us/server/status?ip=";
-const donate = "https://paypal.me/thiccyZ";*/
-const defaultMaxUsersMentionedInSingleMessage = 3;
+const donate = "https://paypal.me/thiccyZ";
 
 var player = 0, m = "", online = false;
-var instances = 3;
+var prefix = "$";
+var raw;
 
-Structures.extend('Guild', Guild => {
-  class MusicGuild extends Guild {
-    constructor(client, data) {
-      super(client, data);
-      this.musicData = {
-        queue: [],
-        isPlaying: false,
-        volume: 1,
-        songDispatcher: null
-      };
+client.on('ready', () => {
+  console.log("I'm in");
+  console.log("as " + client.user.username);
+  var topic_channel = client.channels.cache.get("687806600013938688");
+
+
+  pingServerStatus();
+  setInterval(function() {
+    console.log("Pinging for data");
+    pingServerStatus();
+
+    if (m != "") {
+      topic_channel.setTopic(m + " -- Players Online: " + player + " -- Donate: " + donate);
+      console.log("Updated channel topic");
     }
-  }
-  return MusicGuild;
-});
-
-const client = new Commando.Client({
-  commandPrefix: prefix,
-  owner: '350748674969698306',
-  unknownCommandResponse: false
-});
-
-client.setProvider(
-  sqlite.open(path.join(__dirname, 'settings.sqlite3')).then(db => new Commando.SQLiteProvider(db))
-).catch(console.error);
-
-client.registry
-  .registerDefaultTypes()
-  .registerGroups([
-    ['mc', 'Minecraft Command Group'],
-    ['dice', 'Dice Command Group'],
-    ['music', 'Music Command Group'],
-    ['misc', 'Miscellaneous Command Group']
-  ])
-  .registerDefaultGroups()
-  .registerDefaultCommands()
-  .registerCommandsIn(path.join(__dirname, 'commands'));
-
-client.once('ready', () => {
-  console.log('Ready!');
+}, 20000);
 });
 
 client.on("message", msg => {
-    var content = msg.content;
-    var phrase = content.substr(1).split(" ")[0];
-    var guild = msg.guild;
+  if (msg.content.substr(0,1) == prefix) {
+    var content = msg.content.substr(1);
     var channel = msg.channel;
     var user = msg.author;
-  
-  if (msg.content.startsWith(prefix)) {
+
+    // DONATE
+    if (content.toLowerCase() == "donate") {channel.send("You can support the upkeep of COVIDCraft by donating here: " + donate);}
+    //STATUS
+    else if (content.toLowerCase() == "status") {
+      let on = "Offline";
+      if (raw.online) {on = "Online"}
+      channel.send("```\nCOVIDCraft -- " + m + "\nCurrent Status: " + on + ".\nCurrent Players: " + player + "/" + raw.players.max + "\n```");}
+    //IP
+    else if (content.toLowerCase() == "ip") {
+      channel.send("The IP for this server is `" + ip + "`\nThe Dynmap can be found at " + dynmap_ip);
+    }
+    //HELP
+    else if (content.toLowerCase() == "help") {
+      channel.send("```\n" + prefix + "donate - Sends a donate link to support the server.\n" + prefix + "status - Display server status, including player count and whether the server is down.\n" + prefix + "ip - Sends the server ip and dynmap address.```")
+    }
 
     //DICE FUNCTIONS:
     //ROLL
-    /*else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
+    else if(content.split(" ")[0].toLowerCase() == "roll" && content.split(" ")[1] != null) {
       console.log("starting roll...");
-      var arg = phrase.split(" ")[1].toLowerCase().split("d");
+      var arg = content.split(" ")[1].toLowerCase().split("d");
       var numDice, typeDice;
       var outMsg = "You rolled: ";
       var rolls = "(";
       var total = 0;
 
-      if (phrase.split(" ")[1].toLowerCase().substr(0,1) == "d") {
+      if (content.split(" ")[1].toLowerCase().substr(0,1) == "d") {
         var numDice = 1;
         var typeDice = arg[1];
       }
@@ -117,31 +100,17 @@ client.on("message", msg => {
         }
         channel.send(outMsg);
       }
-    }*/
+    }
     //END DICE FUNCTIONS
 
   }
-  else {
-    //MODERATION
-    //ROUNDABOUT @EVERYONE
-    if ((content.match(/<@/g) || []).length > maxUsersMentionedInSingleMessage) {
-      setTimeout(function() {msg.delete()}, Math.random() * 1000);
-    };
-    //The weird bass thing
-    if ((content.match(/<@/g) || []).length > 0 && (user.id == 269226883793551360 || user.id == 269218199298375681 || user.id == 269300710732988416)) {
-      instances--;
-      if (instances == 0) {
-        setTimeout(function() {msg.delete()}, Math.random() * 1000);
-        instances = Math.ceil(Math.random() * 3) + 2;
-      }
-    }
-  }
+  else if (msg.content == "<@" + client.user.id + ">") {msg.channel.send("My prefix is `" + prefix + "`");}
 });
 
 client.on('error', console.error);
 
-/*function pingServerStatus() {
-  https.get(base_url + ip + "&port=" + port, (resp) => {
+function pingServerStatus() {
+  https.get(base_url + ip, (resp) => {
     let data = '';
 
     resp.on('error', console.error);
@@ -158,7 +127,16 @@ client.on('error', console.error);
       console.log("Sending data back... (players: " + player + ", motto: " + m + ")");
     });
   });
-}*/
+}
 
+function roll(numDice, typeDice) {
+  console.log("rolling...");
+  var arr = [];
+  for (var i = 0; i < numDice; i++) {
+    let rand = Math.ceil(Math.random() * typeDice);
+    arr.push(rand);
+  }
+  return arr;
+}
 
 client.login(token);
